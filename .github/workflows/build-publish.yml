@@ -55,9 +55,11 @@ jobs:
           ORG='${{ env.ORG }}'
           echo "Checking if $VER already exists in ghcr.io/$ORG/$PKG"
           # Query existing container versions and tags; if package doesn't exist yet, allow
-          if gh api -H "Accept: application/vnd.github+json" \
-              "/orgs/${ORG}/packages/container/${PKG}/versions?per_page=100" \
-              | jq -r '.[].metadata.container.tags[]' | grep -Fx "$VER" >/dev/null 2>&1; then
+          set +e
+          RESP=$(gh api -H "Accept: application/vnd.github+json" "/orgs/${ORG}/packages/container/${PKG}/versions?per_page=100" 2>/dev/null)
+          RC=$?
+          set -e
+          if [ $RC -eq 0 ] && echo "$RESP" | jq -r '.[].metadata.container.tags[]' | grep -Fx "$VER" >/dev/null 2>&1; then
             echo "::error::Tag $VER already exists for $PKG"; exit 1;
           else
             echo "Tag $VER is available for $PKG"
