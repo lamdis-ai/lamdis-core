@@ -1,0 +1,28 @@
+FROM node:20-alpine AS build
+WORKDIR /repo
+# Copy monorepo manifests for caching
+COPY package.json ./
+COPY apps/admin-ui/package.json apps/admin-ui/package.json
+COPY packages/ui/package.json packages/ui/package.json
+# Install using workspaces
+RUN npm install --workspaces
+# Copy the full repo
+COPY . .
+# Ensure public directory exists for Next standalone
+RUN mkdir -p apps/admin-ui/public
+WORKDIR /repo/apps/admin-ui
+RUN npm run build
+
+FROM node:20-alpine
+WORKDIR /app
+ENV NODE_ENV=production
+ENV PORT=3001
+COPY --from=build /repo/apps/admin-ui/.next/standalone ./
+# Next.js standalone output expects static assets alongside the server
+COPY --from=build /repo/apps/admin-ui/.next/static ./.next/static
+COPY --from=build /repo/apps/admin-ui/public ./public
+# In some monorepo/workspaces setups, Next may not copy all runtime deps into standalone.
+# Provide a fallback by copying root node_modules so 'next' can be resolved at runtime.
+COPY --from=build /repo/node_modules ./node_modules
+EXPOSE 3001
+CMD ["node", "server.js"]

@@ -1,0 +1,4 @@
+{
+  "manifest": "http://localhost:8081",
+  "connector": "http://localhost:8080"
+}

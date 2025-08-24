@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { color-scheme: dark; }
+
+/* Custom base styles */
+body { @apply bg-bg text-fg; }
+
+/* Map tokens to light palette when [data-theme="light"] is present */
+[data-theme="light"] body {}
+
+/* Utility remaps for components under light theme */
+[data-theme="light"] .card { background-color: #ffffff !important; border-color: #e5e7eb !important; }
+[data-theme="light"] .btn { background-color: #ffffff !important; border-color: #d1d5db !important; color: #111827 !important; }
+[data-theme="light"] .btn:hover { border-color: #9ca3af !important; }
+[data-theme="light"] .input { background-color: #ffffff !important; border-color: #d1d5db !important; color: #111827 !important; }
+[data-theme="light"] .input::placeholder { color: #6b7280 !important; }
+[data-theme="light"] .label { color: #4b5563 !important; }
+
+/* Base colors remap helpers for light to catch opacity variants too */
+[data-theme="light"] [class*="bg-bg"] { background-color: #ffffff !important; }
+[data-theme="light"] [class*="bg-card"] { background-color: #ffffff !important; }
+[data-theme="light"] [class*="border-stroke"] { border-color: #e5e7eb !important; }
+[data-theme="light"] [class~="text-fg"],
+[data-theme="light"] .text-fg { color: #111827 !important; }
+
+/* Elements using bg-bg/text-fg/stroke/card will pick up via element-level utilities; ensure header/footer too */
+[data-theme="light"] header { background-color: rgba(255,255,255,0.85) !important; border-color: #e5e7eb !important; }
+[data-theme="light"] footer { border-color: #e5e7eb !important; color: #6b7280 !important; }
+
+/* Theme-specific logos */
+.logo-dark, .logo-light { display: none !important; }
+[data-theme="dark"] .logo-dark { display: inline-block !important; }
+[data-theme="dark"] .logo-light { display: none !important; }
+[data-theme="light"] .logo-dark { display: none !important; }
+[data-theme="light"] .logo-light { display: inline-block !important; }
+
+/* Override token utilities when in light mode */
+[data-theme="light"] .bg-bg { background-color: #ffffff !important; }
+[data-theme="light"] .text-fg { color: #111827 !important; }
+[data-theme="light"] .bg-card { background-color: #ffffff !important; }
+[data-theme="light"] .border-stroke { border-color: #e5e7eb !important; }
+[data-theme="light"] .text-muted { color: #6b7280 !important; }
+
+.card { @apply rounded-xl border border-stroke/80 bg-card; }
+.btn { @apply inline-flex items-center justify-center rounded-md border border-stroke/70 bg-card px-3 py-2 text-sm font-medium text-fg hover:border-stroke; }
+.input { @apply w-full rounded-md border border-stroke/70 bg-card px-3 py-2 text-sm text-fg placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-brand/40; }
+.label { @apply text-sm text-muted; }

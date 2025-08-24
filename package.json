@@ -1,0 +1,8 @@
+{
+  "name": "lamdis-monorepo",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
+}
